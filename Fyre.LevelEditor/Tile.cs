@@ -38,18 +38,19 @@ namespace Fyre.LevelEditor {
         }
 
         public override string ToString() {
-            string tret = "";
+            StringBuilder stringRepresentation = new StringBuilder();
 
-            tret += $"{(int)type}";
-            if (PoleV) tret += ",1";
-            if (PoleH) tret += ",2";
-            if (HasShortcut) tret += ",3";
-            if (HasWall) tret += ",6";
-            if (HasHive) tret += ",7";
-            if (GarbageHole) tret += ",10";
-            if (WormGrass) tret += ",11";
+            stringRepresentation.Append($"{(int)type}");
+            if (PoleV) stringRepresentation.Append(",1");
+            if (PoleH) stringRepresentation.Append(",2");
+            if (HasShortcut) stringRepresentation.Append(",3");
+            if (HasWall) stringRepresentation.Append(",6");
+            if (HasHive) stringRepresentation.Append(",7");
+            if (GarbageHole) stringRepresentation.Append(",10");
+            if (WormGrass) stringRepresentation.Append(",11");
+            stringRepresentation.Append("|");
 
-            return tret + "|";
+            return stringRepresentation.ToString();
         }
     }
 }

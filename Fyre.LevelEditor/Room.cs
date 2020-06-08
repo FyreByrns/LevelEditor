@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Fyre.LevelEditor {
-
     public class Room {
         enum BorderType { Passable, Solid }
 
@@ -20,7 +19,7 @@ namespace Fyre.LevelEditor {
         /// <summary>
         /// Tiles the player collides with
         /// </summary>
-        public Tile[,] foregroundTiles;
+        public Tile[,] collision;
         public Tile[,] midgroundTiles;
         public Tile[,] backgroundTiles;
 
@@ -29,8 +28,16 @@ namespace Fyre.LevelEditor {
             set => SetTile(x, y, layer, value);
         }
         Tile GetTile(int x, int y, int layer) {
-            if (x < 0 || y < 0 || layer < 0 || x >= width || y >= width || layer > 2) return new Tile();
-            return this[x, y, layer];
+            if (x < 0 || y < 0 || layer < 0 || x >= width || y >= width || layer > 2)
+                throw new IndexOutOfRangeException("Could not find tile at that location.");
+
+            switch (layer) {
+                case 0: return collision[x, y];
+                case 1: return midgroundTiles[x, y];
+                case 2: return backgroundTiles[x, y];
+            }
+
+            throw new IndexOutOfRangeException("Could not find tile at that location.");
         }
         public void SetTile(int x, int y, int layer, Tile tile) {
             if (x < 0 || y < 0 || x >= width || y >= height || layer < 0 || layer > 2) {
@@ -39,7 +46,7 @@ namespace Fyre.LevelEditor {
 
             switch (layer) {
                 case 0:
-                    foregroundTiles[x, y].type = tile.type;
+                    collision[x, y].type = tile.type;
                     break;
                 case 1:
                     midgroundTiles[x, y].type = tile.type;
@@ -54,7 +61,7 @@ namespace Fyre.LevelEditor {
             this.width = width;
             this.height = height;
 
-            foregroundTiles = new Tile[width, height];
+            collision = new Tile[width, height];
             midgroundTiles = new Tile[width, height];
             backgroundTiles = new Tile[width, height];
 
@@ -98,16 +105,17 @@ namespace Fyre.LevelEditor {
         }
 
         string GetTileString() {
-            string tilesToReturn = "";
+            StringBuilder tilesToReturn = new StringBuilder();
 
             for (int i = 0; i < width; i++)
                 for (int j = 0; j < height; j++) {
                     if (backgroundTiles[i, j].type != Tile.TileType.Air || backgroundTiles[i, j].type != Tile.TileType.Air)
-                        foregroundTiles[i, j].HasWall = true;
-                    tilesToReturn += foregroundTiles[i, j].ToString();
+                        collision[i, j].HasWall = true;
+                    tilesToReturn.Append(collision[i, j].ToString());
                 }
 
-            return tilesToReturn.TrimEnd('|');
+            tilesToReturn.Remove(tilesToReturn.Length - 1, 1);
+            return tilesToReturn.ToString();
         }
     }
 }
