@@ -46,13 +46,13 @@ namespace Fyre.LevelEditor {
 
             switch (layer) {
                 case 0:
-                    collision[x, y].type = tile.type;
+                    collision[x, y] = tile;
                     break;
                 case 1:
-                    midgroundTiles[x, y].type = tile.type;
+                    midgroundTiles[x, y] = tile;
                     break;
                 case 2:
-                    backgroundTiles[x, y].type = tile.type;
+                    backgroundTiles[x, y] = tile;
                     break;
             }
         }
@@ -109,7 +109,7 @@ namespace Fyre.LevelEditor {
 
             for (int i = 0; i < width; i++)
                 for (int j = 0; j < height; j++) {
-                    if (backgroundTiles[i, j].type != Tile.TileType.Air || backgroundTiles[i, j].type != Tile.TileType.Air)
+                    if (midgroundTiles[i, j].type != Tile.TileType.Air || backgroundTiles[i, j].type != Tile.TileType.Air)
                         collision[i, j].HasWall = true;
                     tilesToReturn.Append(collision[i, j].ToString());
                 }
